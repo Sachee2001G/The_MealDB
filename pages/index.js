@@ -67,10 +67,10 @@ export default function Home() {
       <header className="bg-white shadow-md">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-800 text-center">
-            Recipe Finder
+            The_Meal_DB
           </h1>
           <p className="text-gray-600 text-center mt-2">
-            Discover amazing recipes from around the world
+            <i>Discover Meals From your trusted recipe-hub platform</i>
           </p>
         </div>
       </header>
