@@ -48,26 +48,25 @@ export default function AddRecipe() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // new Receipe with new ID
-
+    // Create new recipe object
     const newRecipe = {
       ...recipe,
-      id: Date.now().toString(),
+      idMeal: Date.now().toString(),
       ingredients: recipe.ingredients.filter((ing) => ing.trim() !== ""),
     };
 
-    // Get existing receipe from local storage
+    // Get existing recipes from localStorage
     const existingRecipes = JSON.parse(
       localStorage.getItem("customRecipes") || "[]"
     );
 
-    // Add new recipe
+    // Add new recipe to array
     const updatedRecipes = [...existingRecipes, newRecipe];
 
     // Save to localStorage
     localStorage.setItem("customRecipes", JSON.stringify(updatedRecipes));
 
-    setSavedRecipes(updatedRecipes);
+    setSavedRecipes((prev) => [...prev, newRecipe]);
     setShowSuccess(true);
 
     // Reset form
