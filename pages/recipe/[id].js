@@ -67,7 +67,7 @@ export default function RecipeDetail() {
           <p className="text-gray-600 mb-4">Recipe not found</p>
           <Link
             href="/"
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
           >
             Back to Home
           </Link>
@@ -78,6 +78,12 @@ export default function RecipeDetail() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <style jsx>{`
+        input,
+        textarea {
+          color: #1f2937; /* Tailwind's gray-800 for dark text */
+        }
+      `}</style>
       {/* Header */}
       <header className="bg-white shadow-md">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -94,7 +100,7 @@ export default function RecipeDetail() {
 
       {/* Recipe Content */}
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="bg-white rounded-lg text-gray-600 shadow-md overflow-hidden">
           {/* Recipe Image and Title */}
           <div className="md:flex">
             <div className="md:w-1/2">
@@ -124,7 +130,9 @@ export default function RecipeDetail() {
 
           {/* Ingredients Section */}
           <div className="p-6 border-t">
-            <h3 className="text-2xl font-bold mb-4">Ingredients</h3>
+            <h3 className="text-2xl text-gray-600 font-bold mb-4">
+              Ingredients
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {getIngredients().map((ingredient, index) => (
                 <div
@@ -144,7 +152,7 @@ export default function RecipeDetail() {
             <div className="space-y-4">
               {formatInstructions(recipe.strInstructions).map((step, index) => (
                 <div key={index} className="flex">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3 mt-1 flex-shrink-0">
+                  <span className="bg-yellow-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3 mt-1 flex-shrink-0">
                     {index + 1}
                   </span>
                   <p className="text-gray-700">{step}</p>

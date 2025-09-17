@@ -64,6 +64,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <style jsx>{`
+        input,
+        textarea {
+          color: #1f2937; /* Tailwind's gray-800 for dark text */
+        }
+      `}</style>
       <header className="bg-white shadow-md">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-800 text-center">
@@ -87,7 +93,7 @@ export default function Home() {
             />
             <button
               type="submit"
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              className="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
             >
               Search
             </button>
@@ -97,7 +103,7 @@ export default function Home() {
         <div className="text-center mt-6">
           <Link
             href="/add-recipe"
-            className="inline-block px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+            className="inline-block px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
           >
             Add New Recipe
           </Link>
@@ -131,7 +137,7 @@ export default function Home() {
                   </p>
                   <Link
                     href={`/recipe/${recipe.idMeal}`}
-                    className="inline-block w-full text-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                    className="inline-block w-full text-center px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
                   >
                     View Recipe
                   </Link>
