@@ -18,7 +18,7 @@ export default function Home() {
           ? `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(
               searchTerm
             )}`
-          : 'https://www.themealdb.com/api/json/v1/1/search.php?f=a'
+          : "https://www.themealdb.com/api/json/v1/1/search.php?f=a"
       );
       const data = await response.json();
       setRecipes(data.meals || []);
@@ -41,7 +41,9 @@ export default function Home() {
     try {
       setLoading(true);
       const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchValue}`
+        `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(
+          searchValue
+        )}`
       );
       const data = await response.json();
       setRecipes(data.meals || []);
@@ -53,7 +55,7 @@ export default function Home() {
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
     e.preventDefault();
     searchRecipe(searchTerm);
   };
