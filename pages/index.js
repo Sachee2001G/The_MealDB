@@ -60,6 +60,27 @@ export default function Home() {
     searchRecipe(searchTerm);
   };
 
+  // Fetch random meals
+  const getRandomMeals = async () => {
+    setLoading(true);
+    try {
+      // TheMealDB only returns one random meal per request, so fetch multiple times
+      const promises = Array.from({ length: 6 }, () =>
+        fetch("https://www.themealdb.com/api/json/v1/1/random.php").then(
+          (res) => res.json()
+        )
+      );
+      const results = await Promise.all(promises);
+      const meals = results.map((r) => r.meals[0]);
+      setRecipes(meals);
+    } catch (error) {
+      console.error("Error fetching random meals:", error);
+      setRecipes([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Now making a UI for the given logic
 
   return (
@@ -96,6 +117,13 @@ export default function Home() {
               className="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
             >
               Search
+            </button>
+            <button
+              type="button"
+              onClick={getRandomMeals}
+              className="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
+            >
+              Random
             </button>
           </div>
         </form>
