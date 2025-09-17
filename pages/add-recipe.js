@@ -235,7 +235,7 @@ export default function AddRecipe() {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="px-6 py-3 bg-orange-200 text-white rounded-lg hover:bg-orange-300 font-bold"
+                className="px-6 py-3 bg-orange-400 text-white rounded-lg hover:bg-orange-500 font-bold"
               >
                 Save Recipe
               </button>

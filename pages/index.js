@@ -156,7 +156,9 @@ export default function Home() {
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-4">
-                  <h3 className="font-bold text-lg mb-2">{recipe.strMeal}</h3>
+                  <h3 className="font-bold text-lg text-gray-900 mb-2">
+                    {recipe.strMeal}
+                  </h3>
                   <p className="text-gray-600 text-sm mb-3">
                     Category: {recipe.strCategory}
                   </p>

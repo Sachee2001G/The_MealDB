@@ -23,8 +23,11 @@ export default function Search() {
     try {
       setLoading(true);
       const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
+        `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(
+          query
+        )}`
       );
+
       const data = await response.json();
       setRecipes(data.meals || []);
       setLoading(false);
@@ -46,9 +49,12 @@ export default function Search() {
     try {
       setLoading(true);
       const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
+        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(
+          categories
+        )}`
       );
       const data = await response.json();
+
       setRecipes(data.meals || []);
       setLoading(false);
     } catch (error) {
@@ -61,7 +67,9 @@ export default function Search() {
     try {
       setLoading(true);
       const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`
+        `https://www.themealdb.com/api/json/v1/1/filter.php?a=${encodeURIComponent(
+          areas
+        )}`
       );
       const data = await response.json();
       setRecipes(data.meals || []);
