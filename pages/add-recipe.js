@@ -16,7 +16,7 @@ export default function AddRecipe() {
   const [editingId, setEditingId] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
 
-  // Load saved recipes on component mount
+  // Load saved recipes
   useEffect(() => {
     const existingRecipes = JSON.parse(
       localStorage.getItem("customRecipes") || "[]"
@@ -105,7 +105,7 @@ export default function AddRecipe() {
       ingredients: [""],
     });
 
-    // Hide success message after 3 seconds
+    // Hide success message after 3 sec
     setTimeout(() => setShowSuccess(false), 3000);
   };
 
@@ -148,6 +148,7 @@ export default function AddRecipe() {
     localStorage.setItem("customRecipes", JSON.stringify(updatedRecipes));
     setSavedRecipes(updatedRecipes);
     setShowDeleteConfirm(null);
+    window.location.reload();
   };
 
   return (

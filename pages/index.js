@@ -71,7 +71,7 @@ export default function Home() {
 
   const searchRecipe = async (searchValue) => {
     if (searchValue.trim() === "") {
-      fetchRecipes();
+      fetchRecipe();
       return;
     }
 
