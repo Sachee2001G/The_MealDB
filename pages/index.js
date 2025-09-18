@@ -8,10 +8,47 @@ export default function Home() {
 
   // Fetching the data
   useEffect(() => {
-    fetchRecipes();
+    fetchRecipe();
   }, []);
 
-  const fetchRecipes = async () => {
+  // const fetchRecipes = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await fetch(
+  //       "https://www.themealdb.com/api/json/v1/1/search.php?s="
+  //     );
+  //     const data = await response.json();
+  //     setRecipes(data.meals || []);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.log("Error fetching recipes:", error);
+  //     setLoading(false);
+  //   }
+  // };
+
+  const searchRecipes = async (searchValue) => {
+    if (searchValue.trim() === "") {
+      fetchRecipes();
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(
+          searchValue
+        )}`
+      );
+      const data = await response.json();
+      setRecipes(data.meals || []);
+      setLoading(false);
+    } catch (error) {
+      console.log("Error searching recipes:", error);
+      setLoading(false);
+    }
+  };
+
+  const fetchRecipe = async () => {
     try {
       const response = await fetch(
         searchTerm

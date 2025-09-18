@@ -21,11 +21,11 @@ export default function Search() {
   useEffect(() => {
     if (q) {
       setSearchTerm(q);
-      searchRecipes(q, customRecipes);
+      searchRecipes(q);
     }
   }, [q, customRecipes]);
 
-  const searchRecipes = async (query, customRecipes) => {
+  const searchRecipes = async (query) => {
     if (!query.trim()) return;
 
     try {
@@ -41,18 +41,12 @@ export default function Search() {
       // Search custom recipes
       const filteredCustomRecipes = customRecipes.filter(
         (recipe) =>
-          (recipe.name &&
-            recipe.name.toLowerCase().includes(query.toLowerCase())) ||
-          (recipe.category &&
-            recipe.category.toLowerCase().includes(query.toLowerCase())) ||
-          (recipe.area &&
-            recipe.area.toLowerCase().includes(query.toLowerCase())) ||
-          (Array.isArray(recipe.ingredients) &&
-            recipe.ingredients.some(
-              (ingredient) =>
-                ingredient &&
-                ingredient.toLowerCase().includes(query.toLowerCase())
-            ))
+          recipe.name.toLowerCase().includes(query.toLowerCase()) ||
+          recipe.category.toLowerCase().includes(query.toLowerCase()) ||
+          recipe.area.toLowerCase().includes(query.toLowerCase()) ||
+          recipe.ingredients.some((ingredient) =>
+            ingredient.toLowerCase().includes(query.toLowerCase())
+          )
       );
 
       // Convert custom recipes to API format for consistency
@@ -77,6 +71,46 @@ export default function Search() {
     }
   };
 
+  const searchByFirstLetter = async (letter) => {
+    try {
+      setLoading(true);
+
+      // Search API recipes by first letter
+      const response = await fetch(
+        `https://www.themealdb.com/api/json/v1/1/search.php?f=${encodeURIComponent(
+          letter
+        )}`
+      );
+      const data = await response.json();
+      const apiRecipes = data.meals || [];
+
+      // Search custom recipes by first letter
+      const filteredCustomRecipes = customRecipes.filter(
+        (recipe) => recipe.name.toLowerCase().charAt(0) === letter.toLowerCase()
+      );
+
+      // Convert custom recipes to API format
+      const formattedCustomRecipes = filteredCustomRecipes.map((recipe) => ({
+        idMeal: `custom-${recipe.id}`,
+        strMeal: recipe.name,
+        strMealThumb:
+          recipe.image ||
+          "https://via.placeholder.com/300x200?text=Custom+Recipe",
+        strCategory: recipe.category,
+        strArea: recipe.area,
+        isCustom: true,
+      }));
+
+      // Combine results
+      const allRecipes = [...apiRecipes, ...formattedCustomRecipes];
+      setRecipes(allRecipes);
+      setLoading(false);
+    } catch (error) {
+      console.log("Error searching by first letter:", error);
+      setLoading(false);
+    }
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -90,7 +124,9 @@ export default function Search() {
 
       // Search API recipes by category
       const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
+        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(
+          category
+        )}`
       );
       const data = await response.json();
       const apiRecipes = data.meals || [];
@@ -128,7 +164,9 @@ export default function Search() {
 
       // Search API recipes by area
       const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`
+        `https://www.themealdb.com/api/json/v1/1/filter.php?a=${encodeURIComponent(
+          area
+        )}`
       );
       const data = await response.json();
       const apiRecipes = data.meals || [];
@@ -202,10 +240,11 @@ export default function Search() {
     "French",
     "American",
     "Thai",
-    "British",
-    "Nepali",
     "Japanese",
+    "Spanish",
+    "Greek",
   ];
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
   return (
     <div className="min-h-screen bg-gray-50">
