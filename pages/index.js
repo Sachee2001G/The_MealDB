@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Home() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm] = useState("");
 
   // Fetching the data
   useEffect(() => {
@@ -140,35 +140,37 @@ export default function Home() {
       </header>
 
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <form onSubmit={handleSearch} className="max-w-md mx-auto">
-          <div className="flex gap-2">
-            <input
+        <form
+          onSubmit={handleSearch}
+          className="flex justify-center space-x-4 mt-6"
+        >
+          {/* <input
               type="text"
               placeholder="Search for recipes..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-            />
-            <button
-              type="submit"
-              className="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
-            >
-              Search
-            </button>
-            <button
-              type="button"
-              onClick={getRandomMeals}
-              className="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
-            >
-              Random
-            </button>
-          </div>
+            /> */}
+          <button
+            onClick={() => (window.location.href = "/search")}
+            type="submit"
+            className="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
+          >
+            Search
+          </button>
+          <button
+            type="button"
+            onClick={getRandomMeals}
+            className="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
+          >
+            Random
+          </button>
         </form>
 
         <div className="text-center mt-6">
           <Link
             href="./add-recipe"
-            className="inline-block px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
+            className=" px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
           >
             Add New Recipe
           </Link>

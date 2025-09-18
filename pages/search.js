@@ -10,7 +10,7 @@ export default function Search() {
   const [searchTerm, setSearchTerm] = useState("");
   const [customRecipes, setCustomRecipes] = useState([]);
 
-  // Load custom recipes on component mount
+  // Load custom recipes
   useEffect(() => {
     const savedRecipes = JSON.parse(
       localStorage.getItem("customRecipes") || "[]"
@@ -165,7 +165,7 @@ export default function Search() {
       // Search API recipes by area
       const response = await fetch(
         `https://www.themealdb.com/api/json/v1/1/filter.php?a=${encodeURIComponent(
-          areas
+          area
         )}`
       );
       const data = await response.json();
