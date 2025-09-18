@@ -13,29 +13,20 @@
 
 ## File structure:
 
+```
 recipe-app/
-
 ├── components/
-
 │ └── Layout.js
-
 ├── pages/
-
 │ ├── \_app.js
-
 │ ├── index.js
-
 │ ├── search.js
-
 │ ├── add-recipe.js
-
 │ └── recipe/
-
 │ └── [id].js
-
 └── styles/
-
-    └── globals.css
+└── globals.css
+```
 
 ## Key Features Implemented:
 
