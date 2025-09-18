@@ -11,7 +11,7 @@ export default function Home() {
     fetchRecipe();
   }, []);
 
-  // const fetchRecipes = async () => {
+  // const fetchRecipe = async () => {
   //   try {
   //     setLoading(true);
   //     const response = await fetch(
@@ -26,27 +26,27 @@ export default function Home() {
   //   }
   // };
 
-  const searchRecipes = async (searchValue) => {
-    if (searchValue.trim() === "") {
-      fetchRecipes();
-      return;
-    }
+  // const searchRecipe = async (searchValue) => {
+  //   if (searchValue.trim() === "") {
+  //     fetchRecipe();
+  //     return;
+  //   }
 
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(
-          searchValue
-        )}`
-      );
-      const data = await response.json();
-      setRecipes(data.meals || []);
-      setLoading(false);
-    } catch (error) {
-      console.log("Error searching recipes:", error);
-      setLoading(false);
-    }
-  };
+  //   try {
+  //     setLoading(true);
+  //     const response = await fetch(
+  //       `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(
+  //         searchValue
+  //       )}`
+  //     );
+  //     const data = await response.json();
+  //     setRecipes(data.meals || []);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.log("Error searching recipes:", error);
+  //     setLoading(false);
+  //   }
+  // };
 
   const fetchRecipe = async () => {
     try {
@@ -167,7 +167,7 @@ export default function Home() {
 
         <div className="text-center mt-6">
           <Link
-            href="/add-recipe"
+            href="./add-recipe"
             className="inline-block px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
           >
             Add New Recipe

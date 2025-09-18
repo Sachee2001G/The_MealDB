@@ -57,7 +57,7 @@ export default function Search() {
           recipe.image ||
           "https://via.placeholder.com/300x200?text=Custom+Recipe",
         strCategory: recipe.category,
-        strOrigin: recipe.origin,
+        strOrigin: recipe.area,
         isCustom: true,
       }));
 
@@ -78,7 +78,7 @@ export default function Search() {
       // Search API recipes by first letter
       const response = await fetch(
         `https://www.themealdb.com/api/json/v1/1/search.php?f=${encodeURIComponent(
-          letters
+          letter
         )}`
       );
       const data = await response.json();
@@ -97,7 +97,7 @@ export default function Search() {
           recipe.image ||
           "https://via.placeholder.com/300x200?text=Custom+Recipe",
         strCategory: recipe.category,
-        strArea: recipe.origin,
+        strArea: recipe.area,
         isCustom: true,
       }));
 
@@ -144,7 +144,7 @@ export default function Search() {
           recipe.image ||
           "https://via.placeholder.com/300x200?text=Custom+Recipe",
         strCategory: recipe.category,
-        strArea: recipe.origin,
+        strArea: recipe.area,
         isCustom: true,
       }));
 
@@ -158,11 +158,11 @@ export default function Search() {
     }
   };
 
-  const searchByOrigin = async (origin) => {
+  const searchByArea = async (area) => {
     try {
       setLoading(true);
 
-      // Search API recipes by origin
+      // Search API recipes by area
       const response = await fetch(
         `https://www.themealdb.com/api/json/v1/1/filter.php?a=${encodeURIComponent(
           areas
@@ -171,9 +171,9 @@ export default function Search() {
       const data = await response.json();
       const apiRecipes = data.meals || [];
 
-      // Search custom recipes by origin
+      // Search custom recipes by area
       const filteredCustomRecipes = customRecipes.filter((recipe) =>
-        recipe.origin.toLowerCase().includes(origin.toLowerCase())
+        recipe.area.toLowerCase().includes(area.toLowerCase())
       );
 
       // Convert custom recipes to API format
@@ -184,7 +184,7 @@ export default function Search() {
           recipe.image ||
           "https://via.placeholder.com/300x200?text=Custom+Recipe",
         strCategory: recipe.category,
-        strArea: recipe.origin,
+        strArea: recipe.area,
         isCustom: true,
       }));
 
@@ -257,6 +257,7 @@ export default function Search() {
     "Malaysian",
     "Mexican",
     "Moroccan",
+    "Nepali",
     "Polish",
     "Portuguese",
     "Russian",
@@ -299,7 +300,7 @@ export default function Search() {
                 placeholder="Search recipes..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-gray-600"
               />
               <button
                 type="submit"
@@ -313,14 +314,14 @@ export default function Search() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto  px-4 py-8">
         {/* Quick Filters */}
-        <div className="mb-8 bg-white rounded-lg shadow-md p-6">
+        <div className="mb-8 bg-white text-yellow-800 rounded-lg shadow-md p-6">
           <h2 className="text-xl font-bold mb-4">Quick Filters</h2>
 
           {/* Categories */}
           <div className="mb-4">
-            <h3 className="font-semibold mb-2">By Category:</h3>
+            <h3 className="font-semibold text-gray-800 mb-2">By Category:</h3>
             <div className="flex flex-wrap gap-2">
               {categories.map((category) => (
                 <button
@@ -337,12 +338,12 @@ export default function Search() {
 
           {/* Areas */}
           <div className="mb-4">
-            <h3 className="font-semibold mb-2">By Area:</h3>
+            <h3 className="font-semibold text-gray-800 mb-2">By Area:</h3>
             <div className="flex flex-wrap gap-2">
               {areas.map((area) => (
                 <button
                   key={area}
-                  onClick={() => searchByOrigin(area)}
+                  onClick={() => searchByArea(area)}
                   className="px-3 py-1 bg-green-100 text-yellow-700 rounded-full text-sm hover:bg-yellow-200"
                   disabled={loading}
                 >
@@ -354,7 +355,9 @@ export default function Search() {
 
           {/* First Letter Filter */}
           <div className="mb-4">
-            <h3 className="font-semibold mb-2">By First Letter:</h3>
+            <h3 className="font-semibold text-gray-800 mb-2">
+              By First Letter:
+            </h3>
             <div className="flex flex-wrap gap-2">
               {letters.map((letters) => (
                 <button
@@ -373,7 +376,7 @@ export default function Search() {
         {/* Search Results */}
         <div>
           {q && (
-            <h2 className="text-xl font-bold mb-4">
+            <h2 className="text-xl text-gray-700 font-bold mb-4">
               Search Results for "{q}" ({recipes.length} found)
             </h2>
           )}
@@ -384,7 +387,7 @@ export default function Search() {
               <p className="text-gray-600">Searching recipes...</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 text-gray-900 lg:grid-cols-3 gap-6">
               {recipes.map((recipe) => (
                 <div
                   key={recipe.idMeal}
@@ -396,11 +399,13 @@ export default function Search() {
                     className="w-full h-48 object-cover"
                   />
                   <div className="p-4">
-                    <h3 className="font-bold text-lg mb-2">{recipe.strMeal}</h3>
-                    <p className="text-gray-600 text-sm mb-3">
+                    <h3 className="font-bold text-gray-900 text-lg mb-2">
+                      {recipe.strMeal}
+                    </h3>
+                    <p className="text-gray-700 text-sm mb-3">
                       Category: {recipe.strCategory || "N/A"}
                     </p>
-                    <p className="text-gray-600 text-sm mb-4">
+                    <p className="text-gray-700 text-sm mb-4">
                       Area: {recipe.strArea || "N/A"}
                     </p>
                     <button
