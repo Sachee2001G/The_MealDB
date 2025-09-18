@@ -43,7 +43,7 @@ export default function Search() {
         (recipe) =>
           recipe.name.toLowerCase().includes(query.toLowerCase()) ||
           recipe.category.toLowerCase().includes(query.toLowerCase()) ||
-          recipe.area.toLowerCase().includes(query.toLowerCase()) ||
+          recipe.origin.toLowerCase().includes(query.toLowerCase()) ||
           recipe.ingredients.some((ingredient) =>
             ingredient.toLowerCase().includes(query.toLowerCase())
           )
@@ -57,7 +57,7 @@ export default function Search() {
           recipe.image ||
           "https://via.placeholder.com/300x200?text=Custom+Recipe",
         strCategory: recipe.category,
-        strArea: recipe.area,
+        strOrigin: recipe.origin,
         isCustom: true,
       }));
 
@@ -78,7 +78,7 @@ export default function Search() {
       // Search API recipes by first letter
       const response = await fetch(
         `https://www.themealdb.com/api/json/v1/1/search.php?f=${encodeURIComponent(
-          letter
+          letters
         )}`
       );
       const data = await response.json();
@@ -97,7 +97,7 @@ export default function Search() {
           recipe.image ||
           "https://via.placeholder.com/300x200?text=Custom+Recipe",
         strCategory: recipe.category,
-        strArea: recipe.area,
+        strArea: recipe.origin,
         isCustom: true,
       }));
 
@@ -144,7 +144,7 @@ export default function Search() {
           recipe.image ||
           "https://via.placeholder.com/300x200?text=Custom+Recipe",
         strCategory: recipe.category,
-        strArea: recipe.area,
+        strArea: recipe.origin,
         isCustom: true,
       }));
 
@@ -158,22 +158,22 @@ export default function Search() {
     }
   };
 
-  const searchByArea = async (area) => {
+  const searchByOrigin = async (origin) => {
     try {
       setLoading(true);
 
-      // Search API recipes by area
+      // Search API recipes by origin
       const response = await fetch(
         `https://www.themealdb.com/api/json/v1/1/filter.php?a=${encodeURIComponent(
-          area
+          areas
         )}`
       );
       const data = await response.json();
       const apiRecipes = data.meals || [];
 
-      // Search custom recipes by area
+      // Search custom recipes by origin
       const filteredCustomRecipes = customRecipes.filter((recipe) =>
-        recipe.area.toLowerCase().includes(area.toLowerCase())
+        recipe.origin.toLowerCase().includes(origin.toLowerCase())
       );
 
       // Convert custom recipes to API format
@@ -184,7 +184,7 @@ export default function Search() {
           recipe.image ||
           "https://via.placeholder.com/300x200?text=Custom+Recipe",
         strCategory: recipe.category,
-        strArea: recipe.area,
+        strArea: recipe.origin,
         isCustom: true,
       }));
 
@@ -193,7 +193,7 @@ export default function Search() {
       setRecipes(allRecipes);
       setLoading(false);
     } catch (error) {
-      console.log("Error searching by area:", error);
+      console.log("Error searching by origin:", error);
       setLoading(false);
     }
   };
@@ -217,7 +217,6 @@ export default function Search() {
 
   const handleRecipeClick = (recipe) => {
     if (recipe.isCustom) {
-      // For custom recipes, go to a custom recipe detail page or show alert
       router.push(`/custom-recipe/${recipe.idMeal.replace("custom-", "")}`);
     } else {
       router.push(`/recipe/${recipe.idMeal}`);
@@ -231,18 +230,42 @@ export default function Search() {
     "Pasta",
     "Seafood",
     "Vegetarian",
+    "Miscellaneous",
+    "side",
+    "Breakfast",
+    "Goat",
+    "lamb",
+    "pasta",
+    "beef",
   ];
   const areas = [
-    "Italian",
-    "Mexican",
-    "Chinese",
-    "Indian",
-    "French",
     "American",
-    "Thai",
-    "Japanese",
-    "Spanish",
+    "British",
+    "Canadian",
+    "Chinese",
+    "Croatian",
+    "Dutch",
+    "Egyptian",
+    "French",
     "Greek",
+    "Indian",
+    "Irish",
+    "Italian",
+    "Jamaican",
+    "Japanese",
+    "Kenyan",
+    "Malaysian",
+    "Mexican",
+    "Moroccan",
+    "Polish",
+    "Portuguese",
+    "Russian",
+    "Spanish",
+    "Thai",
+    "Tunisian",
+    "Turkish",
+    "Unknown",
+    "Vietnamese",
   ];
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
@@ -252,12 +275,12 @@ export default function Search() {
       <header className="bg-white shadow-md">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
-            <Link
-              href="/"
+            <button
+              onClick={() => router.push("/")}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
             >
               ← Back to Home
-            </Link>
+            </button>
             <h1 className="text-2xl font-bold text-gray-800">Search Recipes</h1>
             <button
               onClick={getRandomRecipe}
@@ -313,17 +336,34 @@ export default function Search() {
           </div>
 
           {/* Areas */}
-          <div>
-            <h3 className="font-semibold mb-2">By Origin:</h3>
+          <div className="mb-4">
+            <h3 className="font-semibold mb-2">By Area:</h3>
             <div className="flex flex-wrap gap-2">
               {areas.map((area) => (
                 <button
                   key={area}
-                  onClick={() => searchByArea(area)}
+                  onClick={() => searchByOrigin(area)}
                   className="px-3 py-1 bg-green-100 text-yellow-700 rounded-full text-sm hover:bg-yellow-200"
                   disabled={loading}
                 >
                   {area}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* First Letter Filter */}
+          <div className="mb-4">
+            <h3 className="font-semibold mb-2">By First Letter:</h3>
+            <div className="flex flex-wrap gap-2">
+              {letters.map((letters) => (
+                <button
+                  key={letters}
+                  onClick={() => searchByFirstLetter(letters)}
+                  className="px-3 py-1 bg-purple-100 text-yellow-700 rounded-full text-sm hover:bg-yellow-200"
+                  disabled={loading}
+                >
+                  {letters}
                 </button>
               ))}
             </div>
@@ -361,21 +401,14 @@ export default function Search() {
                       Category: {recipe.strCategory || "N/A"}
                     </p>
                     <p className="text-gray-600 text-sm mb-4">
-                      Origin: {recipe.strArea || "N/A"}
+                      Area: {recipe.strArea || "N/A"}
                     </p>
-                    <Link
-                      href={
-                        recipe.isCustom
-                          ? `/custom-recipe/${recipe.idMeal.replace(
-                              "custom-",
-                              ""
-                            )}`
-                          : `/recipe/${recipe.idMeal}`
-                      }
+                    <button
+                      onClick={() => handleRecipeClick(recipe)}
                       className="inline-block w-full text-center px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
                     >
                       View Recipe
-                    </Link>
+                    </button>
                   </div>
                 </div>
               ))}

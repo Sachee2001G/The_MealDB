@@ -254,10 +254,10 @@ export default function AddRecipe() {
                   className="border border-gray-200 rounded-lg p-4"
                 >
                   <h4 className="font-bold">{savedRecipe.name}</h4>
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-gray-800 text-sm">
                     {savedRecipe.category} • {savedRecipe.area}
                   </p>
-                  <p className="text-gray-500 text-xs mt-1">
+                  <p className="text-gray-800 text-xs mt-1">
                     {savedRecipe.ingredients.length} ingredients
                   </p>
                 </div>
