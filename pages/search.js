@@ -8,28 +8,68 @@ export default function Search() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [customRecipes, setCustomRecipes] = useState([]);
+
+  // Load custom recipes on component mount
+  useEffect(() => {
+    const savedRecipes = JSON.parse(
+      localStorage.getItem("customRecipes") || "[]"
+    );
+    setCustomRecipes(savedRecipes);
+  }, []);
 
   useEffect(() => {
     if (q) {
       setSearchTerm(q);
-      searchRecipes(q);
+      searchRecipes(q, customRecipes);
     }
-  }, [q]);
+  }, [q, customRecipes]);
 
-  // To search for recipes based on query
-  const searchRecipes = async (query) => {
+  const searchRecipes = async (query, customRecipes) => {
     if (!query.trim()) return;
 
     try {
       setLoading(true);
+
+      // Search API recipes
       const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(
-          query
-        )}`
+        `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
+      );
+      const data = await response.json();
+      const apiRecipes = data.meals || [];
+
+      // Search custom recipes
+      const filteredCustomRecipes = customRecipes.filter(
+        (recipe) =>
+          (recipe.name &&
+            recipe.name.toLowerCase().includes(query.toLowerCase())) ||
+          (recipe.category &&
+            recipe.category.toLowerCase().includes(query.toLowerCase())) ||
+          (recipe.area &&
+            recipe.area.toLowerCase().includes(query.toLowerCase())) ||
+          (Array.isArray(recipe.ingredients) &&
+            recipe.ingredients.some(
+              (ingredient) =>
+                ingredient &&
+                ingredient.toLowerCase().includes(query.toLowerCase())
+            ))
       );
 
-      const data = await response.json();
-      setRecipes(data.meals || []);
+      // Convert custom recipes to API format for consistency
+      const formattedCustomRecipes = filteredCustomRecipes.map((recipe) => ({
+        idMeal: `custom-${recipe.id}`,
+        strMeal: recipe.name,
+        strMealThumb:
+          recipe.image ||
+          "https://via.placeholder.com/300x200?text=Custom+Recipe",
+        strCategory: recipe.category,
+        strArea: recipe.area,
+        isCustom: true,
+      }));
+
+      // Combine both results
+      const allRecipes = [...apiRecipes, ...formattedCustomRecipes];
+      setRecipes(allRecipes);
       setLoading(false);
     } catch (error) {
       console.log("Error searching recipes:", error);
@@ -44,42 +84,82 @@ export default function Search() {
     }
   };
 
-  // To search on the base of category like -> Dessert, Seafood, vegetarian etc.
   const searchByCategory = async (category) => {
     try {
       setLoading(true);
+
+      // Search API recipes by category
       const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(
-          categories
-        )}`
+        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
       );
       const data = await response.json();
+      const apiRecipes = data.meals || [];
 
-      setRecipes(data.meals || []);
+      // Search custom recipes by category
+      const filteredCustomRecipes = customRecipes.filter((recipe) =>
+        recipe.category.toLowerCase().includes(category.toLowerCase())
+      );
+
+      // Convert custom recipes to API format
+      const formattedCustomRecipes = filteredCustomRecipes.map((recipe) => ({
+        idMeal: `custom-${recipe.id}`,
+        strMeal: recipe.name,
+        strMealThumb:
+          recipe.image ||
+          "https://via.placeholder.com/300x200?text=Custom+Recipe",
+        strCategory: recipe.category,
+        strArea: recipe.area,
+        isCustom: true,
+      }));
+
+      // Combine results
+      const allRecipes = [...apiRecipes, ...formattedCustomRecipes];
+      setRecipes(allRecipes);
       setLoading(false);
     } catch (error) {
       console.log("Error searching by category:", error);
       setLoading(false);
     }
   };
-  // To search on the base of area like -> Nepali, Italian, Mexican, Chinese etc.
+
   const searchByArea = async (area) => {
     try {
       setLoading(true);
+
+      // Search API recipes by area
       const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?a=${encodeURIComponent(
-          areas
-        )}`
+        `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`
       );
       const data = await response.json();
-      setRecipes(data.meals || []);
+      const apiRecipes = data.meals || [];
+
+      // Search custom recipes by area
+      const filteredCustomRecipes = customRecipes.filter((recipe) =>
+        recipe.area.toLowerCase().includes(area.toLowerCase())
+      );
+
+      // Convert custom recipes to API format
+      const formattedCustomRecipes = filteredCustomRecipes.map((recipe) => ({
+        idMeal: `custom-${recipe.id}`,
+        strMeal: recipe.name,
+        strMealThumb:
+          recipe.image ||
+          "https://via.placeholder.com/300x200?text=Custom+Recipe",
+        strCategory: recipe.category,
+        strArea: recipe.area,
+        isCustom: true,
+      }));
+
+      // Combine results
+      const allRecipes = [...apiRecipes, ...formattedCustomRecipes];
+      setRecipes(allRecipes);
       setLoading(false);
     } catch (error) {
       console.log("Error searching by area:", error);
       setLoading(false);
     }
   };
-  // To get a random recipe
+
   const getRandomRecipe = async () => {
     try {
       setLoading(true);
@@ -94,6 +174,15 @@ export default function Search() {
     } catch (error) {
       console.log("Error getting random recipe:", error);
       setLoading(false);
+    }
+  };
+
+  const handleRecipeClick = (recipe) => {
+    if (recipe.isCustom) {
+      // For custom recipes, go to a custom recipe detail page or show alert
+      router.push(`/custom-recipe/${recipe.idMeal.replace("custom-", "")}`);
+    } else {
+      router.push(`/recipe/${recipe.idMeal}`);
     }
   };
 
@@ -112,6 +201,10 @@ export default function Search() {
     "Indian",
     "French",
     "American",
+    "Thai",
+    "British",
+    "Nepali",
+    "Japanese",
   ];
 
   return (
@@ -232,7 +325,14 @@ export default function Search() {
                       Origin: {recipe.strArea || "N/A"}
                     </p>
                     <Link
-                      href={`/recipe/${recipe.idMeal}`}
+                      href={
+                        recipe.isCustom
+                          ? `/custom-recipe/${recipe.idMeal.replace(
+                              "custom-",
+                              ""
+                            )}`
+                          : `/recipe/${recipe.idMeal}`
+                      }
                       className="inline-block w-full text-center px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
                     >
                       View Recipe
