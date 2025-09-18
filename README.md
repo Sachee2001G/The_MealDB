@@ -1,13 +1,13 @@
 # The MealDB App
 
-This is a simple Next.js application for browsing, viewing, and adding recipes.
+### This is a simple Next.js application for browsing, viewing, and adding recipes.
 
 ## Getting Started
-1. Clone the repository
-2. Install dependencies:
+1. ### Clone the repository
+2. ### Install dependencies:
    
-   npm install
-   npm run dev
+   ### npm install
+   ### npm run dev
 
 ## File structure:
 
